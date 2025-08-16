@@ -1,0 +1,213 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+env:
+  CARGO_INCREMENTAL: 0
+  CARGO_NET_RETRY: 10
+  CARGO_TERM_COLOR: always
+  RUSTUP_MAX_RETRIES: 10
+  RUST_BACKTRACE: 1
+
+jobs:
+  determine_changes:
+    name: "Determine changes"
+    runs-on: ubuntu-latest
+    outputs:
+      # Flag that is raised when any code is changed
+      code: ${{ steps.changed.outputs.code_any_changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: "Determine changed files"
+        id: changed
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "push" ] && [ "${{ github.ref }}" = "refs/heads/main" -o "${{ github.ref }}" = "refs/heads/master" ]; then
+            # For pushes to main/master, always run
+            echo "code_any_changed=true" >> "${GITHUB_OUTPUT}"
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            # For manual triggers, always run
+            echo "code_any_changed=true" >> "${GITHUB_OUTPUT}"
+          else
+            # For PRs, check if there are code changes
+            CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha || 'origin/main' }}...HEAD)
+            
+            CODE_CHANGED=false
+            
+            while IFS= read -r file; do
+              # Skip documentation and markdown files
+              if [[ "${file}" =~ \.md$ ]]; then
+                echo "Skipping ${file} (markdown file)"
+                continue
+              fi
+              if [[ "${file}" =~ ^docs/ ]]; then
+                echo "Skipping ${file} (documentation)"
+                continue
+              fi
+              
+              echo "Detected code change in: ${file}"
+              CODE_CHANGED=true
+              break
+              
+            done <<< "${CHANGED_FILES}"
+            echo "code_any_changed=${CODE_CHANGED}" >> "${GITHUB_OUTPUT}"
+          fi
+
+  lint:
+    timeout-minutes: 10
+    name: "lint"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: "Install Rust toolchain"
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+
+      - name: "Check Rust formatting"
+        run: cargo fmt --all --check
+
+      - name: "Check markdown formatting"
+        run: |
+          if command -v npx >/dev/null 2>&1; then
+            npx prettier --check "**/*.md"
+          else
+            echo "Prettier not available, skipping markdown format check"
+          fi
+
+  cargo-clippy:
+    timeout-minutes: 10
+    needs: determine_changes
+    if: ${{ needs.determine_changes.outputs.code == 'true' }}
+    runs-on: ubuntu-latest
+    name: "cargo clippy"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: "Install Rust toolchain"
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - name: "Setup Rust cache"
+        uses: Swatinem/rust-cache@v2
+        with:
+          save-if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
+
+      - name: "Run Clippy"
+        run: |
+          if [ -f "Cargo.toml" ]; then
+            cargo clippy --workspace --all-targets --all-features -- -D warnings
+          else
+            # For workspace with crates/ directory
+            cd crates/luxor
+            cargo clippy --all-targets --all-features -- -D warnings
+          fi
+
+  cargo-test:
+    timeout-minutes: 15
+    needs: determine_changes
+    if: ${{ needs.determine_changes.outputs.code == 'true' }}
+    runs-on: ubuntu-latest
+    name: "cargo test"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: "Install Rust toolchain"
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: "Setup Rust cache"
+        uses: Swatinem/rust-cache@v2
+        with:
+          save-if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
+
+      - name: "Run tests"
+        run: |
+          if [ -f "Cargo.toml" ]; then
+            cargo test --workspace --all-features
+          else
+            # For workspace with crates/ directory
+            cd crates/luxor
+            cargo test --all-features
+          fi
+
+  cargo-build:
+    timeout-minutes: 15
+    needs: determine_changes
+    if: ${{ needs.determine_changes.outputs.code == 'true' }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    name: "cargo build | ${{ matrix.os }}"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: "Install Rust toolchain"
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: "Setup Rust cache"
+        uses: Swatinem/rust-cache@v2
+        with:
+          save-if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
+
+      - name: "Build project"
+        run: |
+          if [ -f "Cargo.toml" ]; then
+            cargo build --workspace --all-features
+          else
+            # For workspace with crates/ directory
+            cd crates/luxor
+            cargo build --all-features
+          fi
+        shell: bash
+
+  cargo-doc:
+    timeout-minutes: 10
+    needs: determine_changes
+    if: ${{ needs.determine_changes.outputs.code == 'true' }}
+    runs-on: ubuntu-latest
+    name: "cargo doc"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: "Install Rust toolchain"
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: "Setup Rust cache"
+        uses: Swatinem/rust-cache@v2
+
+      - name: "Build documentation"
+        run: |
+          if [ -f "Cargo.toml" ]; then
+            cargo doc --workspace --all-features --no-deps
+          else
+            # For workspace with crates/ directory
+            cd crates/luxor
+            cargo doc --all-features --no-deps
+          fi

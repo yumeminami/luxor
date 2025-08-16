@@ -1,0 +1,50 @@
+# Clippy configuration for Luxor project
+
+# Documentation
+doc-valid-idents = [
+  "Rich",
+  "PyPI",
+  "ANSI",
+  "RGB",
+  "HSL",
+  "Unicode",
+  "UTF",
+  "ASCII",
+  "TrueColor",
+  "CLI",
+  "API",
+  "JSON",
+  "TOML",
+  "YAML",
+  "SVG",
+  "HTML",
+  "CSS",
+  "Rust",
+  "Python",
+  ".." # Include the defaults
+]
+
+# Performance and style lints
+cognitive-complexity-threshold = 25
+type-complexity-threshold = 60
+too-many-arguments-threshold = 7
+too-many-lines-threshold = 200
+large-error-threshold = 128
+
+# Disallowed methods/types to enforce consistency
+# These can be customized based on project needs
+disallowed-methods = [
+  # Discourage direct use of println! in library code
+  # "std::println",
+  # Encourage using proper error handling
+  # "std::panic::panic",
+]
+
+disallowed-types = [
+  # Encourage using specific error types
+  # "std::boxed::Box<dyn std::error::Error>",
+]
+
+# Allow certain lints that might be too strict for this project
+allow-mixed-uninlined-format-args = true
+suppress-restriction-lint-in-const = true

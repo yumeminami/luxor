@@ -1,0 +1,48 @@
+fail_fast: true
+
+exclude: |
+  (?x)^(
+    rich/.*|
+    uv/.*|
+    .*/(snapshots)/.*|
+  )$
+
+repos:
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.35.3
+    hooks:
+      - id: typos
+
+  - repo: local
+    hooks:
+      - id: cargo-fmt
+        name: cargo fmt
+        entry: bash -c 'if ! command -v cargo >/dev/null 2>&1; then echo "Cargo not found, skipping rust checks"; exit 0; fi; if [ -f "crates/luxor/Cargo.toml" ]; then cd crates/luxor && cargo fmt --check; elif [ -f "Cargo.toml" ]; then cargo fmt --check; else echo "No Cargo.toml found"; fi'
+        language: system
+        types: [rust]
+        pass_filenames: false
+
+  - repo: local
+    hooks:
+      - id: cargo-clippy
+        name: cargo clippy
+        entry: bash -c 'if ! command -v cargo >/dev/null 2>&1; then echo "Cargo not found, skipping clippy"; exit 0; fi; if [ -f "crates/luxor/Cargo.toml" ]; then cd crates/luxor && cargo clippy --all-targets --all-features -- -D warnings; elif [ -f "Cargo.toml" ]; then cargo clippy --all-targets --all-features -- -D warnings; else echo "No Cargo.toml found"; fi'
+        language: system
+        types: [rust]
+        pass_filenames: false
+
+  - repo: local
+    hooks:
+      - id: cargo-test
+        name: cargo test
+        entry: bash -c 'if ! command -v cargo >/dev/null 2>&1; then echo "Cargo not found, skipping tests"; exit 0; fi; if [ -f "crates/luxor/Cargo.toml" ]; then cd crates/luxor && cargo test --all-features; elif [ -f "Cargo.toml" ]; then cargo test --all-features; else echo "No Cargo.toml found"; fi'
+        language: system
+        types: [rust]
+        pass_filenames: false
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        types_or: [yaml, json]
+        files: ^\.github/workflows/.*\.yml$
