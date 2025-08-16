@@ -96,6 +96,9 @@ temp/
 # Local configuration
 .local/
 
+# Issue documentation (Claude Code)
+.claude/
+
 # Backup files
 *.bak
 *.backup
