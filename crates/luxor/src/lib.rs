@@ -24,10 +24,14 @@
 //! - **Style**: Text styling information (color, bold, italic, etc.)
 //! - **Color**: Color representation supporting standard, 8-bit, and 24-bit colors
 
+pub mod animation;
 pub mod ansi;
+pub mod box_drawing;
 pub mod color;
+pub mod components;
 pub mod console;
 pub mod error;
+pub mod layout;
 pub mod markup;
 pub mod measure;
 pub mod protocol;
@@ -45,3 +49,16 @@ pub use protocol::{Measurable, Renderable};
 pub use segment::{ControlCode, Segment, Segments};
 pub use style::Style;
 pub use text::Text;
+
+// Re-export layout utilities
+pub use layout::{Align, LayoutOptions, Padding, Region, VerticalAlign};
+
+// Re-export box drawing utilities
+pub use box_drawing::{BorderSides, BorderStyle, BoxChars, BoxConfig};
+
+// Re-export animation utilities
+pub use animation::{Animation, Spinners, Timer};
+
+// Re-export UI components
+pub use components::Rule;
+// pub use components::{Panel, Progress, Spinner, Table};

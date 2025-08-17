@@ -43,6 +43,10 @@ pub enum LuxorError {
     /// Invalid range errors for text operations.
     #[error("Invalid range: {0}")]
     InvalidRange(String),
+
+    /// Layout calculation errors.
+    #[error("Layout error: {0}")]
+    LayoutError(String),
 }
 
 impl LuxorError {
