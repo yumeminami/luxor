@@ -1,0 +1,40 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/luxor",
+]
+
+[workspace.package]
+authors = ["Luxor Contributors"]
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/yumeminami/luxor"
+homepage = "https://github.com/yumeminami/luxor"
+documentation = "https://docs.rs/luxor"
+
+[workspace.dependencies]
+# Core runtime dependencies
+crossterm = "0.27"
+unicode-width = "0.1"
+thiserror = "1.0"
+
+# Development and testing dependencies
+criterion = "0.5"
+proptest = "1.0"
+
+[profile.release]
+# Optimize for performance in release builds
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[profile.dev]
+# Fast compilation for development
+incremental = true
+debug = 2
+
+[profile.bench]
+# Optimize for benchmarking
+lto = true
+codegen-units = 1
+debug = false
