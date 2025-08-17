@@ -1,6 +1,48 @@
 [package]
 name = "luxor"
 version = "0.1.0"
-edition = "2024"
+edition.workspace = true
+authors.workspace = true
+description = "A Rust implementation of Python Rich library for rich text and beautiful formatting in the terminal"
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+readme = "../../README.md"
+keywords = ["terminal", "cli", "color", "text", "rich"]
+categories = ["command-line-interface", "text-processing"]
+rust-version = "1.70"
 
 [dependencies]
+crossterm.workspace = true
+unicode-width.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+criterion.workspace = true
+proptest.workspace = true
+
+[[bench]]
+name = "render_bench"
+harness = false
+
+[[example]]
+name = "showcase"
+
+[[example]]
+name = "rainbow"
+
+[[example]]
+name = "align"
+
+[[example]]
+name = "highlighter"
+
+[[example]]
+name = "overflow"
+
+[[example]]
+name = "styles"
+
+[[example]]
+name = "markup"

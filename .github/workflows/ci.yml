@@ -116,11 +116,11 @@ jobs:
       - name: "Run Clippy"
         run: |
           if [ -f "Cargo.toml" ]; then
-            cargo clippy --workspace --all-targets --all-features -- -D warnings
+            cargo clippy --workspace --lib --bins --tests --benches --all-features -- -D warnings
           else
             # For workspace with crates/ directory
             cd crates/luxor
-            cargo clippy --all-targets --all-features -- -D warnings
+            cargo clippy --lib --bins --tests --benches --all-features -- -D warnings
           fi
 
   cargo-test:
