@@ -9,6 +9,7 @@ Luxor 是 Python Rich 库的 Rust 实现 - 一个用于在终端中显示富文�
 ## 仓库结构
 
 **当前实现状态：**
+
 ```
 luxor/
 ├── crates/
@@ -87,15 +88,18 @@ cargo bench -- text_rendering
 该库使用基于特征的架构和两阶段渲染：
 
 **核心特征：**
+
 - `Renderable` - 可通过 `render(console, options) -> Vec<Segment>` 渲染为段的对象
 - `Measurable` - 可通过 `measure(console, options) -> Measurement` 计算布局维度的对象
 
 **渲染管道：**
+
 1. **测量阶段**：计算最小/最大宽度要求
 2. **渲染阶段**：生成带有 ANSI 代码的样式文本段
 3. **输出阶段**：将段写入终端并使用适当的转义序列
 
 **关键类型：**
+
 - `Console` - 管理终端状态和选项的中央渲染引擎
 - `Segment` - 包含文本 + 样式 + 可选控制代码的基础渲染单元
 - `Style` - 具有组合支持的样式属性（颜色、粗体、斜体等）
@@ -105,6 +109,7 @@ cargo bench -- text_rendering
 ### 模块概述
 
 **核心模块：**
+
 - `protocol.rs` - 定义具有特征对象支持的 `Renderable` 和 `Measurable` 特征
 - `color.rs` - 完整的颜色系统，包含 RGB/8-bit/Standard 转换算法
 - `style.rs` - 样式组合、继承和字符串解析（"bold red on blue"）
@@ -115,6 +120,7 @@ cargo bench -- text_rendering
 - `error.rs` - 使用 `thiserror` 的结构化错误处理
 
 **测试：**
+
 - 每个模块中的综合单元测试（62 个测试）
 - 端到端功能的集成测试（12 个测试）
 - 使用 `proptest` 进行不变量验证的属性测试（14 个测试）
@@ -123,6 +129,7 @@ cargo bench -- text_rendering
 ## 实现状态
 
 **✅ 第一阶段完成：核心基础**
+
 - 具有 `Renderable`/`Measurable` 协议的基于特征的架构
 - 完整的颜色系统（Standard/8-bit/TrueColor）和转换
 - 样式组合和继承系统
@@ -139,6 +146,7 @@ cargo bench -- text_rendering
 ### ✅ 第一阶段：核心基础（已完成 - Rich 功能的 15%）
 
 **已实现：**
+
 - 具有特征对象支持的核心 `Renderable` 和 `Measurable` 特征
 - 完整的 `Color` 系统，包含 Standard/8-bit/TrueColor 转换算法
 - 具有继承和字符串解析的 `Style` 组合系统
@@ -151,6 +159,7 @@ cargo bench -- text_rendering
 ### 🔄 第二阶段：文本和标记系统（4-5 周 - 下一优先级）
 
 **所有其他组件的关键基础：**
+
 - **Rich 标记解析器** - BBCode 样式语法 `[bold red]text[/bold red]`
 - **文本跨度** - 文本内的样式范围和适当的组合
 - **文字换行** - 具有 Unicode 感知的智能文本流
@@ -161,6 +170,7 @@ cargo bench -- text_rendering
 ### 📋 第三阶段：布局基础（3-4 周）
 
 **复杂 UI 组件的必需基础：**
+
 - **`Layout` 类** - 具有约束的灵活水平/垂直分割
 - **`Padding`** - 内容周围的空间管理和各种填充模式
 - **`Align`** - 容器内的内容对齐（居中、左、右）
@@ -171,6 +181,7 @@ cargo bench -- text_rendering
 ### 🎨 第四阶段：核心 UI 组件（4-5 周）
 
 **最常用的 Rich 组件：**
+
 - **`Panel`** - 带有标题、副标题和各种框样式的边框容器
 - **`Table`** - 功能丰富的表格，具有自动调整大小、排序、样式、边框
 - **`Rule`** - 带有样式的水平/垂直线和分隔符
@@ -179,6 +190,7 @@ cargo bench -- text_rendering
 ### 🌳 第五阶段：高级组件（4-5 周）
 
 **复杂的交互和显示组件：**
+
 - **`Tree`** - 带有引导线和图标的分层树显示
 - **`Columns`** - 具有相等/最佳宽度分布的多列布局
 - **`Progress`** - 具有实时更新和 ETA 的多进度条系统
@@ -188,6 +200,7 @@ cargo bench -- text_rendering
 ### 📝 第六阶段：内容渲染（4-6 周）
 
 **丰富的内容处理和显示：**
+
 - **`Markdown`** - 完整的 markdown 渲染，包含代码块、表格、链接
 - **`Pretty`** - 具有语法高亮的 Python 对象美化打印
 - **`JSON`** - 带有高亮和验证的美化 JSON 渲染
@@ -198,6 +211,7 @@ cargo bench -- text_rendering
 ### ⚡ 第七阶段：交互和动态功能（3-4 周）
 
 **用户交互和动态内容：**
+
 - **`Prompt`** - 具有验证和自动完成的增强输入提示
 - **`Screen`** - 全屏应用的备用屏幕缓冲区管理
 - **表情符号支持** - 表情符号名称解析（`:smiley:` → 😃）和回退
@@ -208,6 +222,7 @@ cargo bench -- text_rendering
 ### 🔧 第八阶段：集成和平台支持（2-3 周）
 
 **导出功能和平台兼容性：**
+
 - **HTML/SVG 导出** - 将 rich 内容导出为带样式的 web 格式
 - **主题系统** - 可自定义的颜色主题和样式预设
 - **Jupyter 集成** - 在 notebook 中的 Rich 显示和交互功能
@@ -247,22 +262,26 @@ cargo bench -- text_rendering
 ## 现实时间线
 
 **完整 Rich 功能对等：**
+
 - **保守估计：** 26-35 周（6.5-8.5 个月）
 - **激进估计：** 20-28 周（5-7 个月）
 - **当前第一阶段：** 3 周（已完成）
 
 **MVP 子集（仅核心功能）：**
+
 - **仅第 1-4 阶段：** 12-16 周（3-4 个月）
 - **基本组件：** 文本标记、布局、面板、表格、进度、树
 
 ## 关键实现模式
 
 ### 错误处理
+
 - 在整个 API 中一致使用 `Result<T, LuxorError>`
 - 使用 `thiserror` 的结构化错误，提供清晰的错误消息
 - 在公共 API 中永不 panic - 对无效输入返回错误
 
 ### 样式组合
+
 ```rust
 // 样式通过分层组合 - 后面的样式覆盖前面的样式
 let base = Style::new().bold().color(Color::red());
@@ -271,6 +290,7 @@ let combined = base.combine(overlay); // 蓝色斜体粗体文本
 ```
 
 ### 用于扩展性的特征对象
+
 ```rust
 // 使用特征对象允许异构集合
 let items: Vec<Box<dyn Renderable>> = vec![
@@ -280,6 +300,7 @@ let items: Vec<Box<dyn Renderable>> = vec![
 ```
 
 ### 两阶段渲染
+
 ```rust
 // 所有可渲染对象都遵循 measure -> render 模式
 let measurement = item.measure(&console, &options)?;
@@ -289,17 +310,20 @@ let segments = item.render(&console, &options)?;
 ## 依赖项
 
 **核心运行时：**
+
 - `crossterm` (0.27) - 跨平台终端操作
 - `unicode-width` (0.1) - Unicode 字符宽度计算
 - `thiserror` (1.0) - 结构化错误处理
 
 **开发/测试：**
+
 - `criterion` (0.5) - 性能基准测试
 - `proptest` (1.0) - 不变量的属性测试
 
 ## 开发指南
 
 ### 代码质量标准
+
 提交前所有代码必须通过这些检查：
 
 ```bash
@@ -311,12 +335,14 @@ cargo doc --no-deps        # 文档构建无错误
 ```
 
 ### 测试要求
+
 - **单元测试**：每个模块必须有全面的测试
 - **集成测试**：在 `tests/integration_tests.rs` 中的端到端功能
 - **属性测试**：在 `tests/property_tests.rs` 中的不变量验证
 - **文档测试**：所有公共 API 示例必须工作
 
 ### 样式指南
+
 - 对可能失败的操作使用 `Result<T, LuxorError>`
 - 在函数参数中优先使用 `&str` 而不是 `String`
 - 所有公共 API 必须有带示例的文档
@@ -343,24 +369,28 @@ cargo doc --no-deps        # 文档构建无错误
 ### 高优先级缺失功能
 
 **1. Rich 标记解析器（阻塞所有 UI 组件）**
+
 - 当前：仅基本 `Style` 应用
 - 缺失：BBCode 样式标记解析 `[bold red]text[/bold red]`
 - 影响：Panel 标题、Table 单元格格式化、所有文本渲染都需要此功能
 - Rich 中的示例：`console.print("[bold cyan]Hello[/bold cyan] World!")`
 
 **2. 布局系统（阻塞复杂 UI）**
+
 - 当前：无布局管理
 - 缺失：`Layout`、`Padding`、`Align`、`Region` 类
 - 影响：无法创建 Panel 边框、Table 布局、多列显示
 - Rich 中的示例：具有分割面板的灵活终端应用程序
 
 **3. 文本处理基础设施（阻塞文本功能）**
+
 - 当前：基本 `Text` 结构体
 - 缺失：文字换行、对齐、溢出处理、文本跨度
 - 影响：所有文本密集型组件都将有糟糕的渲染效果
 - Rich 中的示例：Table 单元格换行、对齐文本、文本高亮
 
 **4. 核心 UI 组件（面向用户的功能）**
+
 - 当前：未实现任何组件
 - 缺失：`Panel`、`Table`、`Tree`、`Progress`、`Rule`
 - 影响：无法实现类似 Rich 的可见输出
@@ -369,26 +399,31 @@ cargo doc --no-deps        # 文档构建无错误
 ### 中等优先级缺失功能
 
 **5. 实时显示系统**
+
 - 缺失：`Live`、`Status`、动态更新
 - 影响：无交互式进度条或动态内容
 
 **6. 内容渲染器**
+
 - 缺失：`Markdown`、`Syntax`、`Pretty`、`JSON`
 - 影响：无法显示代码或文档等丰富内容
 
 **7. 高级功能**
+
 - 缺失：主题、导出功能、Jupyter 集成
 - 影响：有限的自定义和集成选项
 
 ### 当前覆盖评估
 
 **我们拥有的：** 约 15% 的 Rich 功能
+
 - 基本样式和颜色系统
 - 简单文本渲染
 - ANSI 转义序列生成
 - 终端能力检测
 
 **我们缺少的：** 约 85% 的 Rich 功能
+
 - 所有标记解析
 - 所有布局管理
 - 所有 UI 组件
@@ -407,13 +442,16 @@ cargo doc --no-deps        # 文档构建无错误
 ### 开发策略选项
 
 **选项 A：功能对等（6-8 个月）**
+
 - 实现所有 8 个阶段以完全兼容 Rich
 - 最适合需要完整 Rich 功能集的应用程序
 
 **选项 B：核心子集（3-4 个月）**
+
 - 仅专注于第 1-4 阶段（标记、布局、核心组件）
 - 对大多数终端 UI 应用程序来说已足够
 
 **选项 C：MVP（1-2 个月）**
+
 - 仅实现标记解析器和 2-3 个核心组件
 - 适合概念验证和早期采用者

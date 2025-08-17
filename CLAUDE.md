@@ -9,6 +9,7 @@ Luxor is a Rust implementation of the Python Rich library - a library for rich t
 ## Repository Structure
 
 **Current Implementation State:**
+
 ```
 luxor/
 ├── crates/
@@ -87,15 +88,18 @@ cargo bench -- text_rendering
 The library uses a trait-based architecture with two-phase rendering:
 
 **Core Traits:**
+
 - `Renderable` - Objects that can render to segments via `render(console, options) -> Vec<Segment>`
 - `Measurable` - Objects that can calculate layout dimensions via `measure(console, options) -> Measurement`
 
 **Rendering Pipeline:**
+
 1. **Measurement Phase**: Calculate minimum/maximum width requirements
 2. **Rendering Phase**: Generate styled text segments with ANSI codes
 3. **Output Phase**: Write segments to terminal with proper escape sequences
 
 **Key Types:**
+
 - `Console` - Central rendering engine managing terminal state and options
 - `Segment` - Fundamental rendering unit containing text + style + optional control codes
 - `Style` - Styling attributes (colors, bold, italic, etc.) with composition support
@@ -105,8 +109,9 @@ The library uses a trait-based architecture with two-phase rendering:
 ### Module Overview
 
 **Core Modules:**
+
 - `protocol.rs` - Defines `Renderable` and `Measurable` traits with trait object support
-- `color.rs` - Complete color system with RGB/8-bit/Standard conversion algorithms  
+- `color.rs` - Complete color system with RGB/8-bit/Standard conversion algorithms
 - `style.rs` - Style composition, inheritance, and string parsing ("bold red on blue")
 - `segment.rs` - Text segments with Unicode-aware width calculation and splitting
 - `console.rs` - Terminal management, rendering pipeline, and `Text` struct
@@ -115,14 +120,16 @@ The library uses a trait-based architecture with two-phase rendering:
 - `error.rs` - Structured error handling using `thiserror`
 
 **Testing:**
+
 - Comprehensive unit tests (62 tests) in each module
-- Integration tests (12 tests) for end-to-end functionality  
+- Integration tests (12 tests) for end-to-end functionality
 - Property-based tests (14 tests) using `proptest` for invariant validation
 - Documentation tests (50 tests) ensuring examples work correctly
 
 ## Implementation Status
 
 **✅ Phase 1 Complete: Core Foundation**
+
 - Trait-based architecture with `Renderable`/`Measurable` protocols
 - Complete color system (Standard/8-bit/TrueColor) with conversion
 - Style composition and inheritance system
@@ -135,6 +142,7 @@ The library uses a trait-based architecture with two-phase rendering:
 ## Rich Python Library Analysis
 
 **Key Files to Study:**
+
 - `rich/console.py` - Core rendering engine (~2000+ lines)
 - `rich/segment.py` - Fundamental rendering unit
 - `rich/style.py` - Style system implementation
@@ -147,23 +155,26 @@ The library uses a trait-based architecture with two-phase rendering:
 Rich uses a layered rendering architecture:
 
 1. **Console** (rich/console.py:Console) - Central rendering engine that manages output streams and rendering options
-2. **Segment** (rich/segment.py:Segment) - Minimal rendering unit containing text, style, and control codes  
+2. **Segment** (rich/segment.py:Segment) - Minimal rendering unit containing text, style, and control codes
 3. **Renderable Protocol** (rich/protocol.py) - Objects implement `__rich_console__()` or `__rich__()` methods
 4. **Two-phase rendering** - Measurement phase followed by rendering phase
 
 ### Key Components
 
 **Style System:**
+
 - `Style` class manages text attributes (color, bold, italic, etc.)
 - `Color` class supports standard, 8-bit, and truecolor
 - `Theme` class manages style collections
 
 **Layout System:**
+
 - `Measurement` calculates minimum/maximum width requirements
 - `Layout` provides flexible splitting (horizontal/vertical)
 - `Padding` handles spacing around content
 
 **Component System:**
+
 - `Text` - Rich text with markup support
 - `Table` - Auto-sizing tables with styling
 - `Panel` - Bordered containers
@@ -171,12 +182,14 @@ Rich uses a layered rendering architecture:
 - `Tree`, `Columns`, `Rule` - Additional UI components
 
 **Rendering Pipeline:**
+
 1. Objects implement rendering protocol via `__rich_console__()`
 2. Console calls measure phase to determine layout requirements
 3. Console calls render phase to generate `Segment` objects
 4. Segments are written to output stream with ANSI codes
 
 ### Design Patterns Used
+
 - **Protocol-oriented design** - Duck typing with `__rich__()` methods
 - **Composition pattern** - Components can contain other renderables
 - **Visitor pattern** - Console "visits" renderables to measure and render
@@ -187,10 +200,12 @@ Rich uses a layered rendering architecture:
 **⚠️ SCOPE UPDATE:** After analyzing the complete Python Rich library (54 modules), the original roadmap covered only ~30% of Rich's features. This expanded roadmap aims for full feature parity.
 
 ### ✅ Phase 1: Core Foundation (Completed - 15% of Rich features)
+
 **Implemented:**
+
 - Core `Renderable` and `Measurable` traits with trait object support
 - Complete `Color` system with Standard/8-bit/TrueColor conversion algorithms
-- `Style` composition system with inheritance and string parsing  
+- `Style` composition system with inheritance and string parsing
 - `Segment` rendering units with Unicode-aware text processing
 - `Console` rendering engine with terminal capability detection
 - `Measurement` system for layout constraint solving
@@ -198,7 +213,9 @@ Rich uses a layered rendering architecture:
 - Comprehensive error handling with structured types
 
 ### 🔄 Phase 2: Text & Markup System (4-5 weeks - Next Priority)
+
 **Critical Foundation for all other components:**
+
 - **Rich Markup Parser** - BBCode-like syntax `[bold red]text[/bold red]`
 - **Text Spans** - Style ranges within text with proper composition
 - **Word Wrapping** - Intelligent text flow with Unicode awareness
@@ -207,7 +224,9 @@ Rich uses a layered rendering architecture:
 - **Enhanced Text struct** - Full-featured text handling with markup support
 
 ### 📋 Phase 3: Layout Foundation (3-4 weeks)
+
 **Essential for complex UI components:**
+
 - **`Layout` class** - Flexible horizontal/vertical splits with constraints
 - **`Padding`** - Space management around content with various padding modes
 - **`Align`** - Content alignment within containers (Center, Left, Right)
@@ -216,14 +235,18 @@ Rich uses a layered rendering architecture:
 - **Ratio Resolution** - Proportional layout distribution algorithms
 
 ### 🎨 Phase 4: Core UI Components (4-5 weeks)
+
 **Most commonly used Rich components:**
+
 - **`Panel`** - Bordered containers with titles, subtitles, and various box styles
 - **`Table`** - Feature-rich tables with auto-sizing, sorting, styling, borders
 - **`Rule`** - Horizontal/vertical lines and separators with styling
 - **`Bar`** - Progress bars and data visualization bars with gradients
 
 ### 🌳 Phase 5: Advanced Components (4-5 weeks)
+
 **Complex interactive and display components:**
+
 - **`Tree`** - Hierarchical tree display with guide lines and icons
 - **`Columns`** - Multi-column layouts with equal/optimal width distribution
 - **`Progress`** - Multiple progress bar system with live updates and ETA
@@ -231,7 +254,9 @@ Rich uses a layered rendering architecture:
 - **`Live`** - Live updating displays with refresh control and threading
 
 ### 📝 Phase 6: Content Rendering (4-6 weeks)
+
 **Rich content processing and display:**
+
 - **`Markdown`** - Complete markdown rendering with code blocks, tables, links
 - **`Pretty`** - Python object pretty printing with syntax highlighting
 - **`JSON`** - Pretty JSON rendering with highlighting and validation
@@ -240,7 +265,9 @@ Rich uses a layered rendering architecture:
 - **`Traceback`** - Beautiful error traceback rendering with context
 
 ### ⚡ Phase 7: Interactive & Dynamic Features (3-4 weeks)
+
 **User interaction and dynamic content:**
+
 - **`Prompt`** - Enhanced input prompts with validation and auto-completion
 - **`Screen`** - Alternate screen buffer management for full-screen apps
 - **Emoji Support** - Emoji name resolution (`:smiley:` → 😃) with fallbacks
@@ -249,7 +276,9 @@ Rich uses a layered rendering architecture:
 - **Input/Output** - File operations and stream handling
 
 ### 🔧 Phase 8: Integration & Platform Support (2-3 weeks)
+
 **Export capabilities and platform compatibility:**
+
 - **HTML/SVG Export** - Export rich content to web formats with styling
 - **Theme System** - Customizable color themes and style presets
 - **Jupyter Integration** - Rich display in notebooks with interactive features
@@ -260,24 +289,28 @@ Rich uses a layered rendering architecture:
 ## Updated Technical Challenges
 
 ### Extreme Complexity (10/10) - NEW
+
 - **Rich Markup Parser** - Complex BBCode-like syntax with nested tags and validation
 - **Layout Constraint Solver** - Multi-dimensional layout with flexible constraints
 - **Live Updating System** - Thread-safe dynamic content with minimal flicker
 - **Terminal State Management** - Complex terminal control and capability detection
 
 ### High Complexity (9/10)
+
 - **Unicode width calculation** - Complex character width rules with emoji support
 - **ANSI escape sequences** - Terminal compatibility and color handling
 - **Dynamic styling** - Style inheritance and composition in Rust's ownership model
 - **Markdown/Syntax Rendering** - Complex parsing with syntax highlighting
 
 ### Medium Complexity (6/10)
+
 - **Component composition** - Using `Box<dyn Trait>` for renderable collections
 - **Layout algorithms** - Constraint solving for flexible layouts
 - **Measurement system** - Recursive width calculation
 - **Content export** - HTML/SVG generation with proper formatting
 
 ### Lower Complexity (3/10)
+
 - **Basic rendering** - String building and output
 - **Color conversion** - RGB/HSL/terminal color mapping
 - **Simple components** - Straightforward struct implementations
@@ -285,17 +318,20 @@ Rich uses a layered rendering architecture:
 ## Realistic Timeline
 
 **Complete Rich Feature Parity:**
+
 - **Conservative Estimate:** 26-35 weeks (6.5-8.5 months)
 - **Aggressive Estimate:** 20-28 weeks (5-7 months)
 - **Current Phase 1:** 3 weeks (completed)
 
 **MVP Subset (Core Features Only):**
+
 - **Phases 1-4 Only:** 12-16 weeks (3-4 months)
 - **Essential Components:** Text markup, Layout, Panel, Table, Progress, Tree
 
 ## Performance Goals
 
 Target 10-100x performance improvement over Python Rich:
+
 - Zero-cost abstractions where possible
 - Efficient string handling with `String`/`&str`
 - Minimal allocations in hot paths
@@ -304,11 +340,13 @@ Target 10-100x performance improvement over Python Rich:
 ## Key Implementation Patterns
 
 ### Error Handling
+
 - Use `Result<T, LuxorError>` consistently throughout the API
 - Structured errors with `thiserror` for clear error messages
 - Never panic in public APIs - return errors for invalid inputs
 
 ### Style Composition
+
 ```rust
 // Styles compose via layering - later styles override earlier ones
 let base = Style::new().bold().color(Color::red());
@@ -317,6 +355,7 @@ let combined = base.combine(overlay); // blue italic bold text
 ```
 
 ### Trait Objects for Extensibility
+
 ```rust
 // Use trait objects to allow heterogeneous collections
 let items: Vec<Box<dyn Renderable>> = vec![
@@ -326,6 +365,7 @@ let items: Vec<Box<dyn Renderable>> = vec![
 ```
 
 ### Two-Phase Rendering
+
 ```rust
 // All renderables follow the measure -> render pattern
 let measurement = item.measure(&console, &options)?;
@@ -335,17 +375,20 @@ let segments = item.render(&console, &options)?;
 ## Dependencies
 
 **Core Runtime:**
+
 - `crossterm` (0.27) - Cross-platform terminal manipulation
 - `unicode-width` (0.1) - Unicode character width calculation
 - `thiserror` (1.0) - Structured error handling
 
 **Development/Testing:**
+
 - `criterion` (0.5) - Performance benchmarking
 - `proptest` (1.0) - Property-based testing for invariants
 
 ## Development Guidelines
 
 ### Code Quality Standards
+
 All code must pass these checks before committing:
 
 ```bash
@@ -357,12 +400,14 @@ cargo doc --no-deps        # Documentation builds without errors
 ```
 
 ### Testing Requirements
+
 - **Unit tests**: Each module must have comprehensive tests
 - **Integration tests**: End-to-end functionality in `tests/integration_tests.rs`
-- **Property tests**: Invariant validation in `tests/property_tests.rs`  
+- **Property tests**: Invariant validation in `tests/property_tests.rs`
 - **Documentation tests**: All public API examples must work
 
 ### Style Guide
+
 - Use `Result<T, LuxorError>` for fallible operations
 - Prefer `&str` over `String` in function parameters
 - All public APIs must be documented with examples
@@ -374,7 +419,7 @@ cargo doc --no-deps        # Documentation builds without errors
 The `rich/` directory contains the complete Python Rich source code for reference. Key files for understanding the architecture:
 
 - `rich/console.py` - Core rendering engine (~2000+ lines)
-- `rich/segment.py` - Fundamental rendering unit  
+- `rich/segment.py` - Fundamental rendering unit
 - `rich/protocol.py` - Renderable interface definition
 - `rich/style.py` - Style system implementation
 - `rich/text.py` - Rich text with markup support
@@ -389,24 +434,28 @@ Based on comprehensive analysis of the Python Rich library, here are the most cr
 ### High Priority Missing Features
 
 **1. Rich Markup Parser (BLOCKING ALL UI COMPONENTS)**
+
 - Current: Only basic `Style` application
 - Missing: BBCode-like markup parsing `[bold red]text[/bold red]`
 - Impact: Required for Panel titles, Table cell formatting, all text rendering
 - Examples in Rich: `console.print("[bold cyan]Hello[/bold cyan] World!")`
 
 **2. Layout System (BLOCKING COMPLEX UIs)**
-- Current: No layout management  
+
+- Current: No layout management
 - Missing: `Layout`, `Padding`, `Align`, `Region` classes
 - Impact: Cannot create Panel borders, Table layouts, multi-column displays
 - Examples in Rich: Flexible terminal applications with split panes
 
 **3. Text Processing Infrastructure (BLOCKING TEXT FEATURES)**
+
 - Current: Basic `Text` struct
 - Missing: Word wrapping, justification, overflow handling, text spans
 - Impact: All text-heavy components will have poor rendering
 - Examples in Rich: Table cell wrapping, justified text, text highlighting
 
 **4. Core UI Components (USER-FACING FEATURES)**
+
 - Current: None implemented
 - Missing: `Panel`, `Table`, `Tree`, `Progress`, `Rule`
 - Impact: No visible Rich-like output possible
@@ -415,26 +464,31 @@ Based on comprehensive analysis of the Python Rich library, here are the most cr
 ### Medium Priority Missing Features
 
 **5. Live Display System**
+
 - Missing: `Live`, `Status`, dynamic updates
 - Impact: No interactive progress bars or dynamic content
 
-**6. Content Renderers**  
+**6. Content Renderers**
+
 - Missing: `Markdown`, `Syntax`, `Pretty`, `JSON`
 - Impact: Cannot display rich content like code or documents
 
 **7. Advanced Features**
+
 - Missing: Themes, export capabilities, Jupyter integration
 - Impact: Limited customization and integration options
 
 ### Current Coverage Assessment
 
 **What we HAVE:** ~15% of Rich's features
+
 - Basic styling and color system
 - Simple text rendering
-- ANSI escape generation  
+- ANSI escape generation
 - Terminal capability detection
 
 **What we LACK:** ~85% of Rich's features
+
 - All markup parsing
 - All layout management
 - All UI components
@@ -445,7 +499,7 @@ Based on comprehensive analysis of the Python Rich library, here are the most cr
 ### Recommended Immediate Next Steps
 
 1. **Implement Rich Markup Parser** (Phase 2) - Unblocks everything else
-2. **Build Layout Foundation** (Phase 3) - Enables complex UIs  
+2. **Build Layout Foundation** (Phase 3) - Enables complex UIs
 3. **Create Panel Component** (Phase 4) - First visible Rich-like output
 4. **Add Table Component** (Phase 4) - Most requested feature
 5. **Implement Progress Bars** (Phase 5) - Popular interactive feature
@@ -453,13 +507,16 @@ Based on comprehensive analysis of the Python Rich library, here are the most cr
 ### Development Strategy Options
 
 **Option A: Feature Parity (6-8 months)**
+
 - Implement all 8 phases for complete Rich compatibility
 - Best for applications requiring full Rich feature set
 
-**Option B: Core Subset (3-4 months)**  
+**Option B: Core Subset (3-4 months)**
+
 - Focus on Phases 1-4 only (markup, layout, core components)
 - Sufficient for most terminal UI applications
 
 **Option C: MVP (1-2 months)**
+
 - Implement only markup parser and 2-3 core components
 - Good for proof-of-concept and early adopters

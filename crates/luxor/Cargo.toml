@@ -28,3 +28,21 @@ harness = false
 
 [[example]]
 name = "showcase"
+
+[[example]]
+name = "rainbow"
+
+[[example]]
+name = "align"
+
+[[example]]
+name = "highlighter"
+
+[[example]]
+name = "overflow"
+
+[[example]]
+name = "styles"
+
+[[example]]
+name = "markup"
