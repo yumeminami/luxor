@@ -268,9 +268,190 @@ impl Spinners {
         )
     }
 
+    /// Arc spinner
+    pub fn arc() -> Animation {
+        Animation::new(
+            vec![
+                "◜".to_string(),
+                "◠".to_string(),
+                "◝".to_string(),
+                "◞".to_string(),
+                "◡".to_string(),
+                "◟".to_string(),
+            ],
+            Duration::from_millis(100),
+        )
+    }
+
+    /// Circle halves: ◐ ◓ ◑ ◒
+    pub fn circle_halves() -> Animation {
+        Animation::new(
+            vec!["◐".to_string(), "◓".to_string(), "◑".to_string(), "◒".to_string()],
+            Duration::from_millis(120),
+        )
+    }
+
+    /// Circle quarters: ◴ ◷ ◶ ◵
+    pub fn circle_quarters() -> Animation {
+        Animation::new(
+            vec!["◴".to_string(), "◷".to_string(), "◶".to_string(), "◵".to_string()],
+            Duration::from_millis(120),
+        )
+    }
+
+    /// Square corners: ◰ ◳ ◲ ◱
+    pub fn square_corners() -> Animation {
+        Animation::new(
+            vec!["◰".to_string(), "◳".to_string(), "◲".to_string(), "◱".to_string()],
+            Duration::from_millis(100),
+        )
+    }
+
+    /// Triangle corners: ◢ ◣ ◤ ◥
+    pub fn triangle() -> Animation {
+        Animation::new(
+            vec!["◢".to_string(), "◣".to_string(), "◤".to_string(), "◥".to_string()],
+            Duration::from_millis(100),
+        )
+    }
+
+    /// Pipe spinner: ┤ ┘ ┴ └ ├ ┌ ┬ ┐
+    pub fn pipe() -> Animation {
+        Animation::new(
+            vec![
+                "┤".to_string(),
+                "┘".to_string(),
+                "┴".to_string(),
+                "└".to_string(),
+                "├".to_string(),
+                "┌".to_string(),
+                "┬".to_string(),
+                "┐".to_string(),
+            ],
+            Duration::from_millis(100),
+        )
+    }
+
+    /// dqpb spinner: d q p b
+    pub fn dqpb() -> Animation {
+        Animation::new(
+            vec!["d".to_string(), "q".to_string(), "p".to_string(), "b".to_string()],
+            Duration::from_millis(80),
+        )
+    }
+
+    /// Line variant 2
+    pub fn line2() -> Animation {
+        Animation::new(
+            vec!["-".to_string(), "\\".to_string(), "|".to_string(), "/".to_string()],
+            Duration::from_millis(100),
+        )
+    }
+
+    /// Bouncing bar inside brackets
+    pub fn bouncing_bar() -> Animation {
+        let width = 8usize;
+        let mut frames = Vec::new();
+        for i in 0..width {
+            let mut inner = vec![' '; width];
+            inner[i] = '=';
+            frames.push(format!("[{}]", inner.iter().collect::<String>()));
+        }
+        for i in (0..width).rev() {
+            let mut inner = vec![' '; width];
+            inner[i] = '=';
+            frames.push(format!("[{}]", inner.iter().collect::<String>()));
+        }
+        Animation::new(frames, Duration::from_millis(80))
+    }
+
+    /// Scrolling simple dots
+    pub fn simple_dots_scrolling() -> Animation {
+        Animation::new(
+            vec![
+                "   ".to_string(),
+                ".  ".to_string(),
+                ".. ".to_string(),
+                "...".to_string(),
+                " ..".to_string(),
+                "  .".to_string(),
+            ],
+            Duration::from_millis(200),
+        )
+    }
+
+    /// Hearts
+    pub fn hearts() -> Animation {
+        Animation::new(
+            vec![
+                "💜".to_string(),
+                "💙".to_string(),
+                "💚".to_string(),
+                "💛".to_string(),
+                "🧡".to_string(),
+                "❤️".to_string(),
+            ],
+            Duration::from_millis(120),
+        )
+    }
+
+    /// Earth
+    pub fn earth() -> Animation {
+        Animation::new(
+            vec!["🌍".to_string(), "🌎".to_string(), "🌏".to_string()],
+            Duration::from_millis(180),
+        )
+    }
+
+    /// Moon phases
+    pub fn moon() -> Animation {
+        Animation::new(
+            vec![
+                "🌑".to_string(),
+                "🌒".to_string(),
+                "🌓".to_string(),
+                "🌔".to_string(),
+                "🌕".to_string(),
+                "🌖".to_string(),
+                "🌗".to_string(),
+                "🌘".to_string(),
+            ],
+            Duration::from_millis(140),
+        )
+    }
+
+    /// Star
+    pub fn star() -> Animation {
+        Animation::new(
+            vec!["✶".to_string(), "✸".to_string(), "✹".to_string(), "✺".to_string()],
+            Duration::from_millis(120),
+        )
+    }
+
+    /// Toggle (two-state)
+    pub fn toggle() -> Animation {
+        Animation::new(vec!["□".to_string(), "■".to_string()], Duration::from_millis(220))
+    }
+
+    /// Toggle variant 2
+    pub fn toggle2() -> Animation {
+        Animation::new(vec!["▮".to_string(), "▯".to_string()], Duration::from_millis(220))
+    }
+
+    /// Toggle variant 3
+    pub fn toggle3() -> Animation {
+        Animation::new(vec!["◉".to_string(), "◎".to_string()], Duration::from_millis(220))
+    }
+
+    /// Toggle variant 4
+    pub fn toggle4() -> Animation {
+        Animation::new(vec!["◍".to_string(), "○".to_string()], Duration::from_millis(220))
+    }
+
     /// Get a spinner by name for easier configuration.
     pub fn by_name(name: &str) -> Option<Animation> {
         match name {
+            // existing
             "dots" => Some(Self::dots()),
             "line" => Some(Self::line()),
             "arrow" => Some(Self::arrow()),
@@ -279,6 +460,31 @@ impl Spinners {
             "bouncing_ball" => Some(Self::bouncing_ball()),
             "simple_dots" => Some(Self::simple_dots()),
             "ascii" => Some(Self::ascii()),
+            // new (snake_case)
+            "arc" => Some(Self::arc()),
+            "circle_halves" => Some(Self::circle_halves()),
+            "circle_quarters" => Some(Self::circle_quarters()),
+            "square_corners" => Some(Self::square_corners()),
+            "triangle" => Some(Self::triangle()),
+            "pipe" => Some(Self::pipe()),
+            "dqpb" => Some(Self::dqpb()),
+            "line2" => Some(Self::line2()),
+            "bouncing_bar" => Some(Self::bouncing_bar()),
+            "simple_dots_scrolling" => Some(Self::simple_dots_scrolling()),
+            "hearts" => Some(Self::hearts()),
+            "earth" => Some(Self::earth()),
+            "moon" => Some(Self::moon()),
+            "star" => Some(Self::star()),
+            "toggle" => Some(Self::toggle()),
+            "toggle2" => Some(Self::toggle2()),
+            "toggle3" => Some(Self::toggle3()),
+            "toggle4" => Some(Self::toggle4()),
+            // camelCase aliases commonly used by Rich
+            "circleHalves" => Some(Self::circle_halves()),
+            "circleQuarters" => Some(Self::circle_quarters()),
+            "squareCorners" => Some(Self::square_corners()),
+            "bouncingBar" => Some(Self::bouncing_bar()),
+            "simpleDotsScrolling" => Some(Self::simple_dots_scrolling()),
             _ => None,
         }
     }
@@ -286,6 +492,7 @@ impl Spinners {
     /// Get a list of all available spinner names.
     pub fn available_names() -> Vec<&'static str> {
         vec![
+            // core
             "dots",
             "line",
             "arrow",
@@ -294,6 +501,25 @@ impl Spinners {
             "bouncing_ball",
             "simple_dots",
             "ascii",
+            // extended
+            "arc",
+            "circle_halves",
+            "circle_quarters",
+            "square_corners",
+            "triangle",
+            "pipe",
+            "dqpb",
+            "line2",
+            "bouncing_bar",
+            "simple_dots_scrolling",
+            "hearts",
+            "earth",
+            "moon",
+            "star",
+            "toggle",
+            "toggle2",
+            "toggle3",
+            "toggle4",
         ]
     }
 }
