@@ -203,6 +203,7 @@ fn highlight_numbers(text: &str) -> Result<Text, LuxorError> {
 }
 
 /// Find email pattern starting at position (returns char positions)
+#[allow(clippy::type_complexity)]
 fn find_email_at_position(chars: &[char], start: usize) -> Option<(usize, usize)> {
     if start >= chars.len() {
         return None;

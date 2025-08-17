@@ -400,6 +400,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::reversed_empty_ranges)]
     fn test_stylize_range_invalid() {
         let mut text = Text::new("Hello");
         let style = Style::new().bold();

@@ -9,6 +9,7 @@ use proptest::prelude::*;
 // Strategies for generating test data
 
 /// Strategy for generating valid RGB values.
+#[allow(clippy::type_complexity)]
 fn rgb_strategy() -> impl Strategy<Value = (u8, u8, u8)> {
     (any::<u8>(), any::<u8>(), any::<u8>())
 }

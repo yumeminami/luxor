@@ -291,7 +291,7 @@ fn test_thread_safety() {
             thread::spawn(move || {
                 let text = Text::new(&format!("Thread {}", i)).with_style((*style).clone());
                 let options = ConsoleOptions::new();
-                text.render(&*console, &options).unwrap()
+                text.render(&console, &options).unwrap()
             })
         })
         .collect();

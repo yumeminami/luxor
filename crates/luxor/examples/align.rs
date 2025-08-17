@@ -75,17 +75,17 @@ fn demonstrate_centered_titles(console: &Console) -> Result<(), LuxorError> {
     println!("3. Centered titles and headers:");
 
     // Create a centered title
-    create_centered_title(&console, "LUXOR LIBRARY", 50)?;
+    create_centered_title(console, "LUXOR LIBRARY", 50)?;
 
     // Create section headers
-    create_section_header(&console, "Features", 50)?;
+    create_section_header(console, "Features", 50)?;
     console.print(Text::new("• Rich text markup parsing"))?;
     console.print(Text::new("• Style composition and inheritance"))?;
     console.print(Text::new("• Unicode-aware text processing"))?;
 
     println!();
 
-    create_section_header(&console, "Performance", 50)?;
+    create_section_header(console, "Performance", 50)?;
     console.print(Text::new("• Zero-cost abstractions"))?;
     console.print(Text::new("• Minimal memory allocations"))?;
     console.print(Text::new("• SIMD-ready architecture"))?;

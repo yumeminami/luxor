@@ -1,5 +1,5 @@
 use criterion::{Criterion, criterion_group, criterion_main};
-use luxor::{Color, Console, ConsoleOptions, Style, Text};
+use luxor::{Color, Console, ConsoleOptions, Renderable, Style, Text};
 
 fn benchmark_text_rendering(c: &mut Criterion) {
     let console = Console::new();
@@ -14,7 +14,7 @@ fn benchmark_text_rendering(c: &mut Criterion) {
 
     c.bench_function("render styled text", |b| {
         let text =
-            Text::new("Hello, world!").style(Style::new().bold().color(Color::rgb(255, 0, 0)));
+            Text::new("Hello, world!").with_style(Style::new().bold().color(Color::rgb(255, 0, 0)));
         b.iter(|| {
             let _segments = text.render(&console, &options).unwrap();
         });

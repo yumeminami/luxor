@@ -430,13 +430,15 @@ mod tests {
         let white_result = Color::rgb_to_eight_bit(255, 255, 255);
         let black_result = Color::rgb_to_eight_bit(0, 0, 0);
 
-        // All results should be valid 8-bit color indices
-        // The specific values depend on the algorithm, so we just verify they're in range
-        assert!(red_result < 16 || red_result >= 16); // Always true, just checking it compiles
-        assert!(green_result < 16 || green_result >= 16);
-        assert!(blue_result < 16 || blue_result >= 16);
-        assert!(white_result < 16 || white_result >= 16);
-        assert!(black_result < 16 || black_result >= 16);
+        // All results should be valid 8-bit color indices (verify they don't panic)
+        // The specific values depend on the algorithm, we just ensure the function executes
+        let _ = (
+            red_result,
+            green_result,
+            blue_result,
+            white_result,
+            black_result,
+        );
     }
 
     #[test]

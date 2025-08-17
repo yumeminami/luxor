@@ -1,7 +1,10 @@
 //! Comprehensive benchmarks for Luxor library.
 
 use criterion::{BatchSize, BenchmarkId, Criterion, criterion_group, criterion_main};
-use luxor::{Color, ColorSystem, Console, ConsoleOptions, Measurement, Segment, Style, Text};
+use luxor::{
+    Color, ColorSystem, Console, ConsoleOptions, Measurable, Measurement, Renderable, Segment,
+    Style, Text,
+};
 
 /// Benchmark text rendering performance.
 fn benchmark_text_rendering(c: &mut Criterion) {
@@ -19,7 +22,7 @@ fn benchmark_text_rendering(c: &mut Criterion) {
     // Benchmark styled text rendering
     c.bench_function("render styled text", |b| {
         let text =
-            Text::new("Hello, world!").style(Style::new().bold().color(Color::rgb(255, 0, 0)));
+            Text::new("Hello, world!").with_style(Style::new().bold().color(Color::rgb(255, 0, 0)));
         b.iter(|| {
             let _segments = text.render(&console, &options).unwrap();
         });
@@ -27,7 +30,7 @@ fn benchmark_text_rendering(c: &mut Criterion) {
 
     // Benchmark complex styled text
     c.bench_function("render complex styled text", |b| {
-        let text = Text::new("Complex styled text with many attributes").style(
+        let text = Text::new("Complex styled text with many attributes").with_style(
             Style::new()
                 .bold()
                 .italic()
@@ -254,7 +257,7 @@ fn benchmark_ansi_operations(c: &mut Criterion) {
 fn benchmark_color_systems(c: &mut Criterion) {
     let console = Console::new();
     let text =
-        Text::new("Benchmark text").style(Style::new().bold().color(Color::rgb(255, 128, 64)));
+        Text::new("Benchmark text").with_style(Style::new().bold().color(Color::rgb(255, 128, 64)));
 
     let mut group = c.benchmark_group("color_systems");
 
